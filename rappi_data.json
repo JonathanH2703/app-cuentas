@@ -1,0 +1,196 @@
+{
+  "credit_cards": [
+    {
+      "id": 1,
+      "account_id": 2,
+      "credit_limit_cents": 500000000,
+      "cut_off_day": 15,
+      "payment_due_day": 2,
+      "interest_rate_ea": 28.5,
+      "handling_fee_cents": 0,
+      "last_four_digits": "0000"
+    }
+  ],
+  "card_purchases": [
+    {
+      "card_id": 1,
+      "merchant": "COMPRA EN RAPPI (3/6)",
+      "purchase_date_millis": 1720933200000,
+      "total_amount_cents": 45560796,
+      "installments_total": 6,
+      "installments_paid": 3,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "card_id": 1,
+      "merchant": "COMPRA EN RAPPI (3/6)",
+      "purchase_date_millis": 1720933200000,
+      "total_amount_cents": 138324396,
+      "installments_total": 6,
+      "installments_paid": 3,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "card_id": 1,
+      "merchant": "SURTIFAMILIAR CERRITO",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 3510000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "TIENDAS ARA",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 5060000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 3364300,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "MERCADO PAGO*MERCADOLI",
+      "purchase_date_millis": 1726290000000,
+      "total_amount_cents": 5539000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "SIGMA ELECTRONICA LIMI",
+      "purchase_date_millis": 1726290000000,
+      "total_amount_cents": 13137600,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "EDS EL PARAISO",
+      "purchase_date_millis": 1726462800000,
+      "total_amount_cents": 3300400,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "INVERSIONES PURPURE SA",
+      "purchase_date_millis": 1726462800000,
+      "total_amount_cents": 9889000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "EDS EL PARAISO",
+      "purchase_date_millis": 1726722000000,
+      "total_amount_cents": 3201500,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "UNICENTRO CALI",
+      "purchase_date_millis": 1726808400000,
+      "total_amount_cents": 250000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "GOYURT UNICENTRO CALI",
+      "purchase_date_millis": 1726808400000,
+      "total_amount_cents": 1590000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "SUMOTO",
+      "purchase_date_millis": 1726894800000,
+      "total_amount_cents": 6180000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1726981200000,
+      "total_amount_cents": 3304000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "MULTIPLEX UNICALI",
+      "purchase_date_millis": 1727067600000,
+      "total_amount_cents": 2250000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    },
+    {
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1727240400000,
+      "total_amount_cents": 3002500,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": true
+    }
+  ],
+  "transactions": [
+    {
+      "account_id": 2,
+      "category_id": 10,
+      "amount_cents": 72146832,
+      "type": "INCOME",
+      "date_millis": 1726030800000,
+      "note": "Abono a tarjeta RappiCard (PSE)",
+      "merchant": "PSE PAGO"
+    },
+    {
+      "account_id": 2,
+      "category_id": 9,
+      "amount_cents": 45560800,
+      "type": "INCOME",
+      "date_millis": 1727845200000,
+      "note": "Anulación de consumo Rappi",
+      "merchant": "RAPPI APP"
+    }
+  ]
+}

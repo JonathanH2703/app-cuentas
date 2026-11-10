@@ -1,0 +1,23 @@
+R_DEF: Internal format may change without notice
+local
+color background_dark
+color background_light
+color on_primary
+color primary
+drawable ic_launcher
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string auth_description
+string auth_error
+string auth_failed
+string auth_subtitle
+string auth_title
+string auth_unlock
+string db_status_ok
+string security_flag_secure
+style Theme.AppCuentas
+xml backup_rules
+xml data_extraction_rules

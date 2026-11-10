@@ -1,0 +1,1015 @@
+package com.personalfinance.cuentas;
+
+import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
+import android.view.View;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
+import com.personalfinance.cuentas.core.database.AppDatabase;
+import com.personalfinance.cuentas.core.security.BiometricAuthManager;
+import com.personalfinance.cuentas.core.security.KeystoreManager;
+import com.personalfinance.cuentas.core.security.SecurityLifecycleObserver;
+import com.personalfinance.cuentas.core.security.SecurityPreferences;
+import com.personalfinance.cuentas.data.local.dao.AccountDao;
+import com.personalfinance.cuentas.data.local.dao.AllocationDao;
+import com.personalfinance.cuentas.data.local.dao.BackupDao;
+import com.personalfinance.cuentas.data.local.dao.CategoryDao;
+import com.personalfinance.cuentas.data.local.dao.ContactDao;
+import com.personalfinance.cuentas.data.local.dao.CreditCardDao;
+import com.personalfinance.cuentas.data.local.dao.DebtDao;
+import com.personalfinance.cuentas.data.local.dao.EventDao;
+import com.personalfinance.cuentas.data.local.dao.IncomeDao;
+import com.personalfinance.cuentas.data.local.dao.MerchantLearningDao;
+import com.personalfinance.cuentas.data.local.dao.PendingTransactionDao;
+import com.personalfinance.cuentas.data.local.dao.ReceivableDao;
+import com.personalfinance.cuentas.data.local.dao.RecurringItemDao;
+import com.personalfinance.cuentas.data.local.dao.TagDao;
+import com.personalfinance.cuentas.data.local.dao.TransactionDao;
+import com.personalfinance.cuentas.di.AppModule_ProvideContextFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideAccountDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideAllocationDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideAppDatabaseFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideBackupDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideCategoryDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideContactDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideCreditCardDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideDebtDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideEventDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideIncomeDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideMerchantLearningDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvidePendingTransactionDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideReceivableDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideRecurringItemDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideTagDaoFactory;
+import com.personalfinance.cuentas.di.DatabaseModule_ProvideTransactionDaoFactory;
+import com.personalfinance.cuentas.domain.backup.BackupManager;
+import com.personalfinance.cuentas.domain.capture.MerchantCategorizer;
+import com.personalfinance.cuentas.domain.reminders.ReminderPreferences;
+import com.personalfinance.cuentas.domain.reminders.ReminderScheduler;
+import com.personalfinance.cuentas.domain.usecases.AdjustAccountBalanceUseCase;
+import com.personalfinance.cuentas.domain.usecases.AnchorTransactionUseCase;
+import com.personalfinance.cuentas.domain.usecases.ConfirmIncomeUseCase;
+import com.personalfinance.cuentas.domain.usecases.InitializeDefaultAllocationModelUseCase;
+import com.personalfinance.cuentas.domain.usecases.PrepopulateCategoriesUseCase;
+import com.personalfinance.cuentas.domain.usecases.RecordExpenseUseCase;
+import com.personalfinance.cuentas.domain.usecases.capture.ProcessBankCaptureUseCase;
+import com.personalfinance.cuentas.domain.usecases.creditcards.CreateCreditCardUseCase;
+import com.personalfinance.cuentas.domain.usecases.creditcards.PayCreditCardUseCase;
+import com.personalfinance.cuentas.domain.usecases.creditcards.RecordCardPurchaseUseCase;
+import com.personalfinance.cuentas.domain.usecases.debts.CreateDebtUseCase;
+import com.personalfinance.cuentas.domain.usecases.debts.RecordDebtPaymentUseCase;
+import com.personalfinance.cuentas.presentation.accounts.AccountsViewModel;
+import com.personalfinance.cuentas.presentation.accounts.AccountsViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.credit.CreditViewModel;
+import com.personalfinance.cuentas.presentation.credit.CreditViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.dashboard.DashboardViewModel;
+import com.personalfinance.cuentas.presentation.dashboard.DashboardViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.events.EventsViewModel;
+import com.personalfinance.cuentas.presentation.events.EventsViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.incomes.IncomesViewModel;
+import com.personalfinance.cuentas.presentation.incomes.IncomesViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.receivables.ReceivablesViewModel;
+import com.personalfinance.cuentas.presentation.receivables.ReceivablesViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.settings.SettingsViewModel;
+import com.personalfinance.cuentas.presentation.settings.SettingsViewModel_HiltModules;
+import com.personalfinance.cuentas.presentation.transactions.TransactionsViewModel;
+import com.personalfinance.cuentas.presentation.transactions.TransactionsViewModel_HiltModules;
+import com.personalfinance.cuentas.receiver.BankSmsReceiver;
+import com.personalfinance.cuentas.receiver.BankSmsReceiver_MembersInjector;
+import com.personalfinance.cuentas.service.FinanceNotificationListenerService;
+import com.personalfinance.cuentas.service.FinanceNotificationListenerService_MembersInjector;
+import dagger.hilt.android.ActivityRetainedLifecycle;
+import dagger.hilt.android.ViewModelLifecycle;
+import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
+import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
+import dagger.hilt.android.internal.builders.FragmentComponentBuilder;
+import dagger.hilt.android.internal.builders.ServiceComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewModelComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewWithFragmentComponentBuilder;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_InternalFactoryFactory_Factory;
+import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
+import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
+import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
+import dagger.internal.DaggerGenerated;
+import dagger.internal.DoubleCheck;
+import dagger.internal.IdentifierNameString;
+import dagger.internal.KeepFieldType;
+import dagger.internal.LazyClassKeyMap;
+import dagger.internal.MapBuilder;
+import dagger.internal.Preconditions;
+import dagger.internal.Provider;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.processing.Generated;
+
+@DaggerGenerated
+@Generated(
+    value = "dagger.internal.codegen.ComponentProcessor",
+    comments = "https://dagger.dev"
+)
+@SuppressWarnings({
+    "unchecked",
+    "rawtypes",
+    "KotlinInternal",
+    "KotlinInternalInJava",
+    "cast",
+    "deprecation"
+})
+public final class DaggerMainApplication_HiltComponents_SingletonC {
+  private DaggerMainApplication_HiltComponents_SingletonC() {
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    private ApplicationContextModule applicationContextModule;
+
+    private Builder() {
+    }
+
+    public Builder applicationContextModule(ApplicationContextModule applicationContextModule) {
+      this.applicationContextModule = Preconditions.checkNotNull(applicationContextModule);
+      return this;
+    }
+
+    public MainApplication_HiltComponents.SingletonC build() {
+      Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
+      return new SingletonCImpl(applicationContextModule);
+    }
+  }
+
+  private static final class ActivityRetainedCBuilder implements MainApplication_HiltComponents.ActivityRetainedC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private SavedStateHandleHolder savedStateHandleHolder;
+
+    private ActivityRetainedCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ActivityRetainedCBuilder savedStateHandleHolder(
+        SavedStateHandleHolder savedStateHandleHolder) {
+      this.savedStateHandleHolder = Preconditions.checkNotNull(savedStateHandleHolder);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ActivityRetainedC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandleHolder, SavedStateHandleHolder.class);
+      return new ActivityRetainedCImpl(singletonCImpl, savedStateHandleHolder);
+    }
+  }
+
+  private static final class ActivityCBuilder implements MainApplication_HiltComponents.ActivityC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private Activity activity;
+
+    private ActivityCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ActivityCBuilder activity(Activity activity) {
+      this.activity = Preconditions.checkNotNull(activity);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ActivityC build() {
+      Preconditions.checkBuilderRequirement(activity, Activity.class);
+      return new ActivityCImpl(singletonCImpl, activityRetainedCImpl, activity);
+    }
+  }
+
+  private static final class FragmentCBuilder implements MainApplication_HiltComponents.FragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private Fragment fragment;
+
+    private FragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public FragmentCBuilder fragment(Fragment fragment) {
+      this.fragment = Preconditions.checkNotNull(fragment);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.FragmentC build() {
+      Preconditions.checkBuilderRequirement(fragment, Fragment.class);
+      return new FragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragment);
+    }
+  }
+
+  private static final class ViewWithFragmentCBuilder implements MainApplication_HiltComponents.ViewWithFragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private View view;
+
+    private ViewWithFragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+    }
+
+    @Override
+    public ViewWithFragmentCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ViewWithFragmentC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewWithFragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl, view);
+    }
+  }
+
+  private static final class ViewCBuilder implements MainApplication_HiltComponents.ViewC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private View view;
+
+    private ViewCBuilder(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public ViewCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ViewC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, view);
+    }
+  }
+
+  private static final class ViewModelCBuilder implements MainApplication_HiltComponents.ViewModelC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private SavedStateHandle savedStateHandle;
+
+    private ViewModelLifecycle viewModelLifecycle;
+
+    private ViewModelCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ViewModelCBuilder savedStateHandle(SavedStateHandle handle) {
+      this.savedStateHandle = Preconditions.checkNotNull(handle);
+      return this;
+    }
+
+    @Override
+    public ViewModelCBuilder viewModelLifecycle(ViewModelLifecycle viewModelLifecycle) {
+      this.viewModelLifecycle = Preconditions.checkNotNull(viewModelLifecycle);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ViewModelC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandle, SavedStateHandle.class);
+      Preconditions.checkBuilderRequirement(viewModelLifecycle, ViewModelLifecycle.class);
+      return new ViewModelCImpl(singletonCImpl, activityRetainedCImpl, savedStateHandle, viewModelLifecycle);
+    }
+  }
+
+  private static final class ServiceCBuilder implements MainApplication_HiltComponents.ServiceC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private Service service;
+
+    private ServiceCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ServiceCBuilder service(Service service) {
+      this.service = Preconditions.checkNotNull(service);
+      return this;
+    }
+
+    @Override
+    public MainApplication_HiltComponents.ServiceC build() {
+      Preconditions.checkBuilderRequirement(service, Service.class);
+      return new ServiceCImpl(singletonCImpl, service);
+    }
+  }
+
+  private static final class ViewWithFragmentCImpl extends MainApplication_HiltComponents.ViewWithFragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private final ViewWithFragmentCImpl viewWithFragmentCImpl = this;
+
+    private ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+
+
+    }
+  }
+
+  private static final class FragmentCImpl extends MainApplication_HiltComponents.FragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl = this;
+
+    private FragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        Fragment fragmentParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return activityCImpl.getHiltInternalFactoryFactory();
+    }
+
+    @Override
+    public ViewWithFragmentComponentBuilder viewWithFragmentComponentBuilder() {
+      return new ViewWithFragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl);
+    }
+  }
+
+  private static final class ViewCImpl extends MainApplication_HiltComponents.ViewC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final ViewCImpl viewCImpl = this;
+
+    private ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+  }
+
+  private static final class ActivityCImpl extends MainApplication_HiltComponents.ActivityC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl = this;
+
+    private ActivityCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, Activity activityParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+
+
+    }
+
+    @Override
+    public void injectMainActivity(MainActivity mainActivity) {
+      injectMainActivity2(mainActivity);
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(getViewModelKeys(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
+    }
+
+    @Override
+    public Map<Class<?>, Boolean> getViewModelKeys() {
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(8).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_accounts_AccountsViewModel, AccountsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_credit_CreditViewModel, CreditViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel, DashboardViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_events_EventsViewModel, EventsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_incomes_IncomesViewModel, IncomesViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel, ReceivablesViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel, TransactionsViewModel_HiltModules.KeyModule.provide()).build());
+    }
+
+    @Override
+    public ViewModelComponentBuilder getViewModelComponentBuilder() {
+      return new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public FragmentComponentBuilder fragmentComponentBuilder() {
+      return new FragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    @Override
+    public ViewComponentBuilder viewComponentBuilder() {
+      return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    private MainActivity injectMainActivity2(MainActivity instance) {
+      MainActivity_MembersInjector.injectBiometricAuthManager(instance, singletonCImpl.biometricAuthManagerProvider.get());
+      MainActivity_MembersInjector.injectSecurityLifecycleObserver(instance, singletonCImpl.securityLifecycleObserverProvider.get());
+      MainActivity_MembersInjector.injectSecurityPreferences(instance, singletonCImpl.securityPreferencesProvider.get());
+      return instance;
+    }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_personalfinance_cuentas_presentation_credit_CreditViewModel = "com.personalfinance.cuentas.presentation.credit.CreditViewModel";
+
+      static String com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel = "com.personalfinance.cuentas.presentation.transactions.TransactionsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_incomes_IncomesViewModel = "com.personalfinance.cuentas.presentation.incomes.IncomesViewModel";
+
+      static String com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel = "com.personalfinance.cuentas.presentation.dashboard.DashboardViewModel";
+
+      static String com_personalfinance_cuentas_presentation_events_EventsViewModel = "com.personalfinance.cuentas.presentation.events.EventsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_settings_SettingsViewModel = "com.personalfinance.cuentas.presentation.settings.SettingsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel = "com.personalfinance.cuentas.presentation.receivables.ReceivablesViewModel";
+
+      static String com_personalfinance_cuentas_presentation_accounts_AccountsViewModel = "com.personalfinance.cuentas.presentation.accounts.AccountsViewModel";
+
+      @KeepFieldType
+      CreditViewModel com_personalfinance_cuentas_presentation_credit_CreditViewModel2;
+
+      @KeepFieldType
+      TransactionsViewModel com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel2;
+
+      @KeepFieldType
+      IncomesViewModel com_personalfinance_cuentas_presentation_incomes_IncomesViewModel2;
+
+      @KeepFieldType
+      DashboardViewModel com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel2;
+
+      @KeepFieldType
+      EventsViewModel com_personalfinance_cuentas_presentation_events_EventsViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_personalfinance_cuentas_presentation_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      ReceivablesViewModel com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel2;
+
+      @KeepFieldType
+      AccountsViewModel com_personalfinance_cuentas_presentation_accounts_AccountsViewModel2;
+    }
+  }
+
+  private static final class ViewModelCImpl extends MainApplication_HiltComponents.ViewModelC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ViewModelCImpl viewModelCImpl = this;
+
+    private Provider<AccountsViewModel> accountsViewModelProvider;
+
+    private Provider<CreditViewModel> creditViewModelProvider;
+
+    private Provider<DashboardViewModel> dashboardViewModelProvider;
+
+    private Provider<EventsViewModel> eventsViewModelProvider;
+
+    private Provider<IncomesViewModel> incomesViewModelProvider;
+
+    private Provider<ReceivablesViewModel> receivablesViewModelProvider;
+
+    private Provider<SettingsViewModel> settingsViewModelProvider;
+
+    private Provider<TransactionsViewModel> transactionsViewModelProvider;
+
+    private ViewModelCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
+        ViewModelLifecycle viewModelLifecycleParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+
+      initialize(savedStateHandleParam, viewModelLifecycleParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandle savedStateHandleParam,
+        final ViewModelLifecycle viewModelLifecycleParam) {
+      this.accountsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.creditViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.dashboardViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.eventsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.incomesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.receivablesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.transactionsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
+    }
+
+    @Override
+    public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(8).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_accounts_AccountsViewModel, ((Provider) accountsViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_credit_CreditViewModel, ((Provider) creditViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel, ((Provider) dashboardViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_events_EventsViewModel, ((Provider) eventsViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_incomes_IncomesViewModel, ((Provider) incomesViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel, ((Provider) receivablesViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)).put(LazyClassKeyProvider.com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel, ((Provider) transactionsViewModelProvider)).build());
+    }
+
+    @Override
+    public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
+      return Collections.<Class<?>, Object>emptyMap();
+    }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_personalfinance_cuentas_presentation_incomes_IncomesViewModel = "com.personalfinance.cuentas.presentation.incomes.IncomesViewModel";
+
+      static String com_personalfinance_cuentas_presentation_credit_CreditViewModel = "com.personalfinance.cuentas.presentation.credit.CreditViewModel";
+
+      static String com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel = "com.personalfinance.cuentas.presentation.receivables.ReceivablesViewModel";
+
+      static String com_personalfinance_cuentas_presentation_settings_SettingsViewModel = "com.personalfinance.cuentas.presentation.settings.SettingsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel = "com.personalfinance.cuentas.presentation.transactions.TransactionsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_events_EventsViewModel = "com.personalfinance.cuentas.presentation.events.EventsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_accounts_AccountsViewModel = "com.personalfinance.cuentas.presentation.accounts.AccountsViewModel";
+
+      static String com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel = "com.personalfinance.cuentas.presentation.dashboard.DashboardViewModel";
+
+      @KeepFieldType
+      IncomesViewModel com_personalfinance_cuentas_presentation_incomes_IncomesViewModel2;
+
+      @KeepFieldType
+      CreditViewModel com_personalfinance_cuentas_presentation_credit_CreditViewModel2;
+
+      @KeepFieldType
+      ReceivablesViewModel com_personalfinance_cuentas_presentation_receivables_ReceivablesViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_personalfinance_cuentas_presentation_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      TransactionsViewModel com_personalfinance_cuentas_presentation_transactions_TransactionsViewModel2;
+
+      @KeepFieldType
+      EventsViewModel com_personalfinance_cuentas_presentation_events_EventsViewModel2;
+
+      @KeepFieldType
+      AccountsViewModel com_personalfinance_cuentas_presentation_accounts_AccountsViewModel2;
+
+      @KeepFieldType
+      DashboardViewModel com_personalfinance_cuentas_presentation_dashboard_DashboardViewModel2;
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final ViewModelCImpl viewModelCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          ViewModelCImpl viewModelCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.viewModelCImpl = viewModelCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.personalfinance.cuentas.presentation.accounts.AccountsViewModel 
+          return (T) new AccountsViewModel(singletonCImpl.accountDao(), singletonCImpl.adjustAccountBalanceUseCaseProvider.get());
+
+          case 1: // com.personalfinance.cuentas.presentation.credit.CreditViewModel 
+          return (T) new CreditViewModel(singletonCImpl.creditCardDao(), singletonCImpl.debtDao(), singletonCImpl.categoryDao(), singletonCImpl.accountDao(), singletonCImpl.createCreditCardUseCaseProvider.get(), singletonCImpl.recordCardPurchaseUseCaseProvider.get(), singletonCImpl.payCreditCardUseCaseProvider.get(), singletonCImpl.createDebtUseCaseProvider.get(), singletonCImpl.recordDebtPaymentUseCaseProvider.get());
+
+          case 2: // com.personalfinance.cuentas.presentation.dashboard.DashboardViewModel 
+          return (T) new DashboardViewModel(singletonCImpl.accountDao(), singletonCImpl.allocationDao(), singletonCImpl.transactionDao(), singletonCImpl.incomeDao(), singletonCImpl.debtDao(), singletonCImpl.recurringItemDao(), singletonCImpl.categoryDao(), singletonCImpl.creditCardDao(), singletonCImpl.receivableDao(), singletonCImpl.eventDao(), singletonCImpl.recordExpenseUseCaseProvider.get(), singletonCImpl.anchorTransactionUseCaseProvider.get(), singletonCImpl.securityLifecycleObserverProvider.get(), singletonCImpl.securityPreferencesProvider.get(), singletonCImpl.initializeDefaultAllocationModelUseCaseProvider.get());
+
+          case 3: // com.personalfinance.cuentas.presentation.events.EventsViewModel 
+          return (T) new EventsViewModel(singletonCImpl.eventDao());
+
+          case 4: // com.personalfinance.cuentas.presentation.incomes.IncomesViewModel 
+          return (T) new IncomesViewModel(singletonCImpl.incomeDao(), singletonCImpl.accountDao(), singletonCImpl.debtDao(), singletonCImpl.recurringItemDao(), singletonCImpl.allocationDao(), singletonCImpl.confirmIncomeUseCaseProvider.get());
+
+          case 5: // com.personalfinance.cuentas.presentation.receivables.ReceivablesViewModel 
+          return (T) new ReceivablesViewModel(singletonCImpl.contactDao(), singletonCImpl.receivableDao(), singletonCImpl.transactionDao(), singletonCImpl.accountDao(), singletonCImpl.incomeDao(), singletonCImpl.confirmIncomeUseCaseProvider.get());
+
+          case 6: // com.personalfinance.cuentas.presentation.settings.SettingsViewModel 
+          return (T) new SettingsViewModel(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.securityPreferencesProvider.get(), singletonCImpl.reminderPreferencesProvider.get(), singletonCImpl.reminderSchedulerProvider.get(), singletonCImpl.backupManagerProvider.get());
+
+          case 7: // com.personalfinance.cuentas.presentation.transactions.TransactionsViewModel 
+          return (T) new TransactionsViewModel(singletonCImpl.transactionDao(), singletonCImpl.accountDao(), singletonCImpl.categoryDao(), singletonCImpl.allocationDao(), singletonCImpl.debtDao(), singletonCImpl.recurringItemDao(), singletonCImpl.pendingTransactionDao(), singletonCImpl.creditCardDao(), singletonCImpl.recordExpenseUseCaseProvider.get(), singletonCImpl.anchorTransactionUseCaseProvider.get(), singletonCImpl.prepopulateCategoriesUseCaseProvider.get(), singletonCImpl.processBankCaptureUseCaseProvider.get(), singletonCImpl.payCreditCardUseCaseProvider.get(), singletonCImpl.recordDebtPaymentUseCaseProvider.get());
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ActivityRetainedCImpl extends MainApplication_HiltComponents.ActivityRetainedC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl = this;
+
+    private Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
+
+    private ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
+        SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.singletonCImpl = singletonCImpl;
+
+      initialize(savedStateHandleHolderParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.provideActivityRetainedLifecycleProvider = DoubleCheck.provider(new SwitchingProvider<ActivityRetainedLifecycle>(singletonCImpl, activityRetainedCImpl, 0));
+    }
+
+    @Override
+    public ActivityComponentBuilder activityComponentBuilder() {
+      return new ActivityCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public ActivityRetainedLifecycle getActivityRetainedLifecycle() {
+      return provideActivityRetainedLifecycleProvider.get();
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // dagger.hilt.android.ActivityRetainedLifecycle 
+          return (T) ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory.provideActivityRetainedLifecycle();
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ServiceCImpl extends MainApplication_HiltComponents.ServiceC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ServiceCImpl serviceCImpl = this;
+
+    private ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
+      this.singletonCImpl = singletonCImpl;
+
+
+    }
+
+    @Override
+    public void injectFinanceNotificationListenerService(
+        FinanceNotificationListenerService financeNotificationListenerService) {
+      injectFinanceNotificationListenerService2(financeNotificationListenerService);
+    }
+
+    private FinanceNotificationListenerService injectFinanceNotificationListenerService2(
+        FinanceNotificationListenerService instance) {
+      FinanceNotificationListenerService_MembersInjector.injectProcessBankCaptureUseCase(instance, singletonCImpl.processBankCaptureUseCaseProvider.get());
+      return instance;
+    }
+  }
+
+  private static final class SingletonCImpl extends MainApplication_HiltComponents.SingletonC {
+    private final ApplicationContextModule applicationContextModule;
+
+    private final SingletonCImpl singletonCImpl = this;
+
+    private Provider<Context> provideContextProvider;
+
+    private Provider<SecurityPreferences> securityPreferencesProvider;
+
+    private Provider<SecurityLifecycleObserver> securityLifecycleObserverProvider;
+
+    private Provider<ReminderPreferences> reminderPreferencesProvider;
+
+    private Provider<ReminderScheduler> reminderSchedulerProvider;
+
+    private Provider<KeystoreManager> keystoreManagerProvider;
+
+    private Provider<AppDatabase> provideAppDatabaseProvider;
+
+    private Provider<MerchantCategorizer> merchantCategorizerProvider;
+
+    private Provider<ProcessBankCaptureUseCase> processBankCaptureUseCaseProvider;
+
+    private Provider<BiometricAuthManager> biometricAuthManagerProvider;
+
+    private Provider<AdjustAccountBalanceUseCase> adjustAccountBalanceUseCaseProvider;
+
+    private Provider<CreateCreditCardUseCase> createCreditCardUseCaseProvider;
+
+    private Provider<RecordCardPurchaseUseCase> recordCardPurchaseUseCaseProvider;
+
+    private Provider<PayCreditCardUseCase> payCreditCardUseCaseProvider;
+
+    private Provider<CreateDebtUseCase> createDebtUseCaseProvider;
+
+    private Provider<RecordDebtPaymentUseCase> recordDebtPaymentUseCaseProvider;
+
+    private Provider<RecordExpenseUseCase> recordExpenseUseCaseProvider;
+
+    private Provider<AnchorTransactionUseCase> anchorTransactionUseCaseProvider;
+
+    private Provider<InitializeDefaultAllocationModelUseCase> initializeDefaultAllocationModelUseCaseProvider;
+
+    private Provider<ConfirmIncomeUseCase> confirmIncomeUseCaseProvider;
+
+    private Provider<BackupManager> backupManagerProvider;
+
+    private Provider<PrepopulateCategoriesUseCase> prepopulateCategoriesUseCaseProvider;
+
+    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+      this.applicationContextModule = applicationContextModuleParam;
+      initialize(applicationContextModuleParam);
+
+    }
+
+    private PendingTransactionDao pendingTransactionDao() {
+      return DatabaseModule_ProvidePendingTransactionDaoFactory.providePendingTransactionDao(provideAppDatabaseProvider.get());
+    }
+
+    private TransactionDao transactionDao() {
+      return DatabaseModule_ProvideTransactionDaoFactory.provideTransactionDao(provideAppDatabaseProvider.get());
+    }
+
+    private AccountDao accountDao() {
+      return DatabaseModule_ProvideAccountDaoFactory.provideAccountDao(provideAppDatabaseProvider.get());
+    }
+
+    private AllocationDao allocationDao() {
+      return DatabaseModule_ProvideAllocationDaoFactory.provideAllocationDao(provideAppDatabaseProvider.get());
+    }
+
+    private CategoryDao categoryDao() {
+      return DatabaseModule_ProvideCategoryDaoFactory.provideCategoryDao(provideAppDatabaseProvider.get());
+    }
+
+    private MerchantLearningDao merchantLearningDao() {
+      return DatabaseModule_ProvideMerchantLearningDaoFactory.provideMerchantLearningDao(provideAppDatabaseProvider.get());
+    }
+
+    private IncomeDao incomeDao() {
+      return DatabaseModule_ProvideIncomeDaoFactory.provideIncomeDao(provideAppDatabaseProvider.get());
+    }
+
+    private RecurringItemDao recurringItemDao() {
+      return DatabaseModule_ProvideRecurringItemDaoFactory.provideRecurringItemDao(provideAppDatabaseProvider.get());
+    }
+
+    private ReceivableDao receivableDao() {
+      return DatabaseModule_ProvideReceivableDaoFactory.provideReceivableDao(provideAppDatabaseProvider.get());
+    }
+
+    private TagDao tagDao() {
+      return DatabaseModule_ProvideTagDaoFactory.provideTagDao(provideAppDatabaseProvider.get());
+    }
+
+    private ContactDao contactDao() {
+      return DatabaseModule_ProvideContactDaoFactory.provideContactDao(provideAppDatabaseProvider.get());
+    }
+
+    private BackupDao backupDao() {
+      return DatabaseModule_ProvideBackupDaoFactory.provideBackupDao(provideAppDatabaseProvider.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideContextProvider = DoubleCheck.provider(new SwitchingProvider<Context>(singletonCImpl, 2));
+      this.securityPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<SecurityPreferences>(singletonCImpl, 1));
+      this.securityLifecycleObserverProvider = DoubleCheck.provider(new SwitchingProvider<SecurityLifecycleObserver>(singletonCImpl, 0));
+      this.reminderPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<ReminderPreferences>(singletonCImpl, 4));
+      this.reminderSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<ReminderScheduler>(singletonCImpl, 3));
+      this.keystoreManagerProvider = DoubleCheck.provider(new SwitchingProvider<KeystoreManager>(singletonCImpl, 6));
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 5));
+      this.merchantCategorizerProvider = DoubleCheck.provider(new SwitchingProvider<MerchantCategorizer>(singletonCImpl, 8));
+      this.processBankCaptureUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<ProcessBankCaptureUseCase>(singletonCImpl, 7));
+      this.biometricAuthManagerProvider = DoubleCheck.provider(new SwitchingProvider<BiometricAuthManager>(singletonCImpl, 9));
+      this.adjustAccountBalanceUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<AdjustAccountBalanceUseCase>(singletonCImpl, 10));
+      this.createCreditCardUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<CreateCreditCardUseCase>(singletonCImpl, 11));
+      this.recordCardPurchaseUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<RecordCardPurchaseUseCase>(singletonCImpl, 12));
+      this.payCreditCardUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<PayCreditCardUseCase>(singletonCImpl, 13));
+      this.createDebtUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<CreateDebtUseCase>(singletonCImpl, 14));
+      this.recordDebtPaymentUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<RecordDebtPaymentUseCase>(singletonCImpl, 15));
+      this.recordExpenseUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<RecordExpenseUseCase>(singletonCImpl, 16));
+      this.anchorTransactionUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<AnchorTransactionUseCase>(singletonCImpl, 17));
+      this.initializeDefaultAllocationModelUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<InitializeDefaultAllocationModelUseCase>(singletonCImpl, 18));
+      this.confirmIncomeUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<ConfirmIncomeUseCase>(singletonCImpl, 19));
+      this.backupManagerProvider = DoubleCheck.provider(new SwitchingProvider<BackupManager>(singletonCImpl, 20));
+      this.prepopulateCategoriesUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<PrepopulateCategoriesUseCase>(singletonCImpl, 21));
+    }
+
+    @Override
+    public void injectMainApplication(MainApplication mainApplication) {
+      injectMainApplication2(mainApplication);
+    }
+
+    @Override
+    public CreditCardDao creditCardDao() {
+      return DatabaseModule_ProvideCreditCardDaoFactory.provideCreditCardDao(provideAppDatabaseProvider.get());
+    }
+
+    @Override
+    public DebtDao debtDao() {
+      return DatabaseModule_ProvideDebtDaoFactory.provideDebtDao(provideAppDatabaseProvider.get());
+    }
+
+    @Override
+    public EventDao eventDao() {
+      return DatabaseModule_ProvideEventDaoFactory.provideEventDao(provideAppDatabaseProvider.get());
+    }
+
+    @Override
+    public ReminderPreferences reminderPreferences() {
+      return reminderPreferencesProvider.get();
+    }
+
+    @Override
+    public void injectBankSmsReceiver(BankSmsReceiver bankSmsReceiver) {
+      injectBankSmsReceiver2(bankSmsReceiver);
+    }
+
+    @Override
+    public Set<Boolean> getDisableFragmentGetContextFix() {
+      return Collections.<Boolean>emptySet();
+    }
+
+    @Override
+    public ActivityRetainedComponentBuilder retainedComponentBuilder() {
+      return new ActivityRetainedCBuilder(singletonCImpl);
+    }
+
+    @Override
+    public ServiceComponentBuilder serviceComponentBuilder() {
+      return new ServiceCBuilder(singletonCImpl);
+    }
+
+    private MainApplication injectMainApplication2(MainApplication instance) {
+      MainApplication_MembersInjector.injectSecurityLifecycleObserver(instance, securityLifecycleObserverProvider.get());
+      MainApplication_MembersInjector.injectReminderScheduler(instance, reminderSchedulerProvider.get());
+      return instance;
+    }
+
+    private BankSmsReceiver injectBankSmsReceiver2(BankSmsReceiver instance2) {
+      BankSmsReceiver_MembersInjector.injectProcessBankCaptureUseCase(instance2, processBankCaptureUseCaseProvider.get());
+      return instance2;
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.personalfinance.cuentas.core.security.SecurityLifecycleObserver 
+          return (T) new SecurityLifecycleObserver(singletonCImpl.securityPreferencesProvider.get());
+
+          case 1: // com.personalfinance.cuentas.core.security.SecurityPreferences 
+          return (T) new SecurityPreferences(singletonCImpl.provideContextProvider.get());
+
+          case 2: // android.content.Context 
+          return (T) AppModule_ProvideContextFactory.provideContext(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 3: // com.personalfinance.cuentas.domain.reminders.ReminderScheduler 
+          return (T) new ReminderScheduler(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.reminderPreferencesProvider.get());
+
+          case 4: // com.personalfinance.cuentas.domain.reminders.ReminderPreferences 
+          return (T) new ReminderPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 5: // com.personalfinance.cuentas.core.database.AppDatabase 
+          return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.keystoreManagerProvider.get());
+
+          case 6: // com.personalfinance.cuentas.core.security.KeystoreManager 
+          return (T) new KeystoreManager(singletonCImpl.provideContextProvider.get());
+
+          case 7: // com.personalfinance.cuentas.domain.usecases.capture.ProcessBankCaptureUseCase 
+          return (T) new ProcessBankCaptureUseCase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.pendingTransactionDao(), singletonCImpl.transactionDao(), singletonCImpl.accountDao(), singletonCImpl.allocationDao(), singletonCImpl.merchantCategorizerProvider.get(), singletonCImpl.creditCardDao(), singletonCImpl.debtDao());
+
+          case 8: // com.personalfinance.cuentas.domain.capture.MerchantCategorizer 
+          return (T) new MerchantCategorizer(singletonCImpl.categoryDao(), singletonCImpl.merchantLearningDao());
+
+          case 9: // com.personalfinance.cuentas.core.security.BiometricAuthManager 
+          return (T) new BiometricAuthManager(singletonCImpl.provideContextProvider.get());
+
+          case 10: // com.personalfinance.cuentas.domain.usecases.AdjustAccountBalanceUseCase 
+          return (T) new AdjustAccountBalanceUseCase(singletonCImpl.accountDao(), singletonCImpl.transactionDao(), singletonCImpl.categoryDao());
+
+          case 11: // com.personalfinance.cuentas.domain.usecases.creditcards.CreateCreditCardUseCase 
+          return (T) new CreateCreditCardUseCase(singletonCImpl.accountDao(), singletonCImpl.creditCardDao());
+
+          case 12: // com.personalfinance.cuentas.domain.usecases.creditcards.RecordCardPurchaseUseCase 
+          return (T) new RecordCardPurchaseUseCase(singletonCImpl.creditCardDao(), singletonCImpl.transactionDao(), singletonCImpl.categoryDao(), singletonCImpl.allocationDao());
+
+          case 13: // com.personalfinance.cuentas.domain.usecases.creditcards.PayCreditCardUseCase 
+          return (T) new PayCreditCardUseCase(singletonCImpl.creditCardDao(), singletonCImpl.accountDao(), singletonCImpl.transactionDao(), singletonCImpl.categoryDao(), singletonCImpl.allocationDao());
+
+          case 14: // com.personalfinance.cuentas.domain.usecases.debts.CreateDebtUseCase 
+          return (T) new CreateDebtUseCase(singletonCImpl.debtDao());
+
+          case 15: // com.personalfinance.cuentas.domain.usecases.debts.RecordDebtPaymentUseCase 
+          return (T) new RecordDebtPaymentUseCase(singletonCImpl.debtDao());
+
+          case 16: // com.personalfinance.cuentas.domain.usecases.RecordExpenseUseCase 
+          return (T) new RecordExpenseUseCase(singletonCImpl.transactionDao(), singletonCImpl.accountDao(), singletonCImpl.categoryDao(), singletonCImpl.allocationDao(), singletonCImpl.tagDao());
+
+          case 17: // com.personalfinance.cuentas.domain.usecases.AnchorTransactionUseCase 
+          return (T) new AnchorTransactionUseCase(singletonCImpl.transactionDao(), singletonCImpl.debtDao(), singletonCImpl.recurringItemDao(), singletonCImpl.recordDebtPaymentUseCaseProvider.get());
+
+          case 18: // com.personalfinance.cuentas.domain.usecases.InitializeDefaultAllocationModelUseCase 
+          return (T) new InitializeDefaultAllocationModelUseCase(singletonCImpl.allocationDao());
+
+          case 19: // com.personalfinance.cuentas.domain.usecases.ConfirmIncomeUseCase 
+          return (T) new ConfirmIncomeUseCase(singletonCImpl.incomeDao(), singletonCImpl.accountDao(), singletonCImpl.transactionDao(), singletonCImpl.categoryDao(), singletonCImpl.allocationDao());
+
+          case 20: // com.personalfinance.cuentas.domain.backup.BackupManager 
+          return (T) new BackupManager(singletonCImpl.backupDao(), singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 21: // com.personalfinance.cuentas.domain.usecases.PrepopulateCategoriesUseCase 
+          return (T) new PrepopulateCategoriesUseCase(singletonCImpl.categoryDao());
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+}

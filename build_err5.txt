@@ -1,0 +1,39 @@
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=e0a0402e-e7c1-4500-8e04-55902aeebca9, currentDir=C:\app-cuentas}
+Attempting to read last messages from the daemon log...
+Daemon pid: 9204
+  log file: C:\Users\jhoyos\.gradle\daemon\8.10.2\daemon-9204.out.log
+----- Last 20 lines from daemon log file - daemon-9204.out.log -----
+2026-11-05T14:48:36.195-0500 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Command execution: started DaemonCommandExecution[command = Build{id=e0a0402e-e7c1-4500-8e04-55902aeebca9, currentDir=C:\app-cuentas}, connection = DefaultDaemonConnection: socket connection from /127.0.0.1:51475 to /127.0.0.1:51476] after 0.0071333333333333335 minutes of idle
+2026-11-05T14:48:36.196-0500 [INFO] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Marking the daemon as busy, address: [227cf497-50f8-4b6a-ae62-133883e1e1e4 port:51475, addresses:[localhost/127.0.0.1]]
+2026-11-05T14:48:36.196-0500 [DEBUG] [org.gradle.launcher.daemon.registry.PersistentDaemonRegistry] Marking busy by address: [227cf497-50f8-4b6a-ae62-133883e1e1e4 port:51475, addresses:[localhost/127.0.0.1]]
+2026-11-05T14:48:36.201-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on daemon addresses registry.
+2026-11-05T14:48:36.203-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2026-11-05T14:48:36.209-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2026-11-05T14:48:36.210-0500 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] resetting idle timer
+2026-11-05T14:48:36.210-0500 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-11-05T14:48:36.213-0500 [INFO] [org.gradle.launcher.daemon.server.exec.StartBuildOrRespondWithBusy] Daemon is about to start building Build{id=e0a0402e-e7c1-4500-8e04-55902aeebca9, currentDir=C:\app-cuentas}. Dispatching build started information...
+2026-11-05T14:48:36.214-0500 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 49: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@77c89a74
+2026-11-05T14:48:36.218-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [USERDOMAIN_ROAMINGPROFILE, NVM_SYMLINK, PROCESSOR_LEVEL, GIT_PAGER, SESSIONNAME, ALLUSERSPROFILE, PROCESSOR_ARCHITECTURE, VSCODE_PYTHON_AUTOACTIVATE_GUARD, VSCODE_GIT_IPC_HANDLE, ANDROID_HOME, PSModulePath, KIRO_SESSION_ID, SystemDrive, GH_PAGER, VSCODE_INJECTION, COLORTERM, EFC_18552_4126798990, OLLAMA_ORIGINS, DIRNAME, USERNAME, USERDNSDOMAIN, PROMPT_COMMAND, VSCODE_GIT_ASKPASS_NODE, TERM_PROGRAM_VERSION, ProgramFiles(x86), GIT_ASKPASS, CHROME_CRASHPAD_PIPE_NAME, UV, APP_HOME, Q_TERM_DISABLED, DEFAULT_JVM_OPTS, PATHEXT, DriverData, PAGER, BAT_PAGER, SYSTEMD_PAGER, HOMESHARE, CLAUDE_CODE_SSE_PORT, ProgramData, ProgramW6432, HOMEPATH, PROCESSOR_IDENTIFIER, PUBLIC, ProgramFiles, windir, AWS_SDK_UA_APP_ID, ZES_ENABLE_SYSMAN, LOCALAPPDATA, USERDOMAIN, LOGONSERVER, JAVA_HOME, PROMPT, LANG, VSCODE_GIT_ASKPASS_MAIN, OneDrive, =C:, APPDATA, JAVA_EXE, VSCODE_GIT_ASKPASS_EXTRA_ARGS, ChocolateyInstall, VSCODE_AGENT_BASH_FIXUPS, UV_, CommonProgramFiles, Path, VSCODE_AGENT_ZSH_FIXUPS, OS, TERM_PROGRAM, VSCODE_JDWP_ADAPTER_ENDPOINTS, COMPUTERNAME, MANPAGER, DELTA_PAGER, NVM_HOME, PROCESSOR_REVISION, AWS_PAGER, CLASSPATH, CommonProgramW6432, ComSpec, APP_BASE_NAME, VTE_VERSION, EFC_18552_1592913036, SystemRoot, TEMP, HOMEDRIVE, USERPROFILE, TMP, CommonProgramFiles(x86), NUMBER_OF_PROCESSORS, VSCODE_JAVA_EXEC]
+2026-11-05T14:48:36.233-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-11-05T14:48:36.234-0500 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 9204). The daemon log file: C:\Users\jhoyos\.gradle\daemon\8.10.2\daemon-9204.out.log
+2026-11-05T14:48:36.237-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.RequestStopIfSingleUsedDaemon] Requesting daemon stop after processing Build{id=e0a0402e-e7c1-4500-8e04-55902aeebca9, currentDir=C:\app-cuentas}
+2026-11-05T14:48:36.238-0500 [LIFECYCLE] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Daemon will be stopped at the end of the build 
+2026-11-05T14:48:36.238-0500 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Stop as soon as idle requested. The daemon is busy
+2026-11-05T14:48:36.238-0500 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon stop has been requested. Sleeping until state changes.
+2026-11-05T14:48:36.240-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-11-05T14:48:36.240-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=74659461-f9bd-457d-890d-77d6a0811bd6,javaHome=C:\Users\jhoyos\.jdks\jbr-21.0.11,javaVersion=21,javaVendor=JetBrains s.r.o.,daemonRegistryDir=C:\Users\jhoyos\.gradle\daemon,pid=9204,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libsqlcipher.so.----- End of the daemon log -----
+
+JVM crash log found: file:///C:/app-cuentas/hs_err_pid9204.log
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

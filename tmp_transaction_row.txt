@@ -1,0 +1,174 @@
+﻿@Composable
+fun TransactionItemRow(
+    item: TransactionWithDetails,
+    onDelete: () -> Unit,
+    onAnchorClick: () -> Unit = {},
+    onEditClick: () -> Unit = {}
+) {
+    val dateFormatter = SimpleDateFormat("dd MMM, hh:mm a", Locale("es", "CO"))
+    val formattedDate = dateFormatter.format(Date(item.transaction.dateMillis))
+
+    val isExpense  = item.transaction.type == TransactionType.EXPENSE
+    val isIncome   = item.transaction.type == TransactionType.INCOME
+    val isLeisure  = item.transaction.isLeisure
+    val hasAnchor  = item.linkedDebt != null || item.linkedRecurringItem != null
+
+    val catColor = try { Color(android.graphics.Color.parseColor(item.category.colorHex)) }
+                   catch (e: Exception) { MaterialTheme.colorScheme.primary }
+
+    val rowColor = when {
+        isIncome  -> FinancialGreen
+        isLeisure -> FinancialAmber
+        else      -> catColor
+    }
+
+    val signSymbol = if (isIncome || item.transaction.type == TransactionType.TRANSFER_IN) "+" else "-"
+
+    val typeTag: String? = when {
+        isIncome  -> null
+        isLeisure -> "Ocio"
+        item.linkedDebt != null -> "Deuda"
+        item.linkedRecurringItem != null -> "Gasto fijo"
+        else -> null
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.5.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(intrinsicSize = androidx.compose.foundation.layout.IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Barra lateral de color
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .fillMaxHeight()
+                    .background(rowColor.copy(alpha = 0.75f))
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Icono
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(rowColor.copy(alpha = 0.12f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = when {
+                            isLeisure -> Icons.Default.Star
+                            isIncome  -> Icons.automirrored.filled.TrendingUp
+                            else      -> mapIconNameToVector(item.category.iconName)
+                        },
+                        contentDescription = null,
+                        tint = rowColor,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                // Datos
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.transaction.merchant
+                            ?: item.transaction.note?.take(40)
+                            ?: item.category.name,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text(
+                            text = formattedDate,
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = catColor.copy(alpha = 0.10f)
+                        ) {
+                            Text(
+                                text = item.category.name,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                color = catColor,
+                                modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
+                                maxLines = 1
+                            )
+                        }
+                        if (typeTag != null) {
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = rowColor.copy(alpha = 0.12f)
+                            ) {
+                                Text(
+                                    text = typeTag,
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                    color = rowColor,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                    }
+                    val anchorLabel = item.linkedDebt?.name ?: item.linkedRecurringItem?.title
+                    if (anchorLabel != null) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Link, null, tint = FinancialBlue, modifier = Modifier.size(10.dp))
+                            Spacer(Modifier.width(3.dp))
+                            Text(
+                                text = anchorLabel,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                color = FinancialBlue,
+                                maxLines = 1, overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                // Monto + botones
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "$signSymbol${CurrencyFormatter.formatCentsToCop(item.transaction.amountCents)}",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = rowColor,
+                        maxLines = 1
+                    )
+                    Row {
+                        IconButton(onClick = onEditClick, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.Default.Edit, null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(14.dp))
+                        }
+                        IconButton(onClick = onAnchorClick, modifier = Modifier.size(28.dp)) {
+                            Icon(
+                                imageVector = if (hasAnchor) Icons.Default.Link else Icons.Default.LinkOff,
+                                contentDescription = null,
+                                tint = if (hasAnchor) FinancialBlue else MaterialTheme.colorScheme.outline,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                        IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.Default.DeleteOutline, null, tint = FinancialRed.copy(alpha = 0.6f), modifier = Modifier.size(14.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1568 @@
+{
+  "schema_version": 1,
+  "exported_at_millis": 1793304105873,
+  "app_version": "1.0.0",
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Bancolombia",
+      "type": "SAVINGS",
+      "current_balance_cents": 46418900,
+      "color_hex": "#FFDD00",
+      "icon_name": "account_balance",
+      "is_archived": false,
+      "include_in_total": true,
+      "is_exempt_from_gmf": true,
+      "annual_yield_rate": null,
+      "is_static_saving": false,
+      "created_at": 1792919686312
+    },
+    {
+      "id": 2,
+      "name": "Rappi",
+      "type": "CHECKING",
+      "current_balance_cents": 25550000,
+      "color_hex": "#1565C0",
+      "icon_name": "credit_card",
+      "is_archived": false,
+      "include_in_total": false,
+      "is_exempt_from_gmf": false,
+      "annual_yield_rate": null,
+      "is_static_saving": true,
+      "created_at": 1792956818412
+    },
+    {
+      "id": 3,
+      "name": "Nu",
+      "type": "CHECKING",
+      "current_balance_cents": -226757343,
+      "color_hex": "#1565C0",
+      "icon_name": "credit_card",
+      "is_archived": false,
+      "include_in_total": false,
+      "is_exempt_from_gmf": false,
+      "annual_yield_rate": null,
+      "is_static_saving": false,
+      "created_at": 1792957036668
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Alimentación y Mercado",
+      "icon_name": "restaurant",
+      "color_hex": "#FF5722",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    },
+    {
+      "id": 2,
+      "name": "Vivienda y Servicios",
+      "icon_name": "home",
+      "color_hex": "#2196F3",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    },
+    {
+      "id": 3,
+      "name": "Transporte",
+      "icon_name": "directions_car",
+      "color_hex": "#607D8B",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    },
+    {
+      "id": 4,
+      "name": "Salud y Farmacia",
+      "icon_name": "medical_services",
+      "color_hex": "#E91E63",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    },
+    {
+      "id": 5,
+      "name": "Educación",
+      "icon_name": "school",
+      "color_hex": "#009688",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    },
+    {
+      "id": 6,
+      "name": "Restaurantes y Salidas",
+      "icon_name": "local_cafe",
+      "color_hex": "#FF9800",
+      "default_block_type": "WANTS",
+      "is_system": true
+    },
+    {
+      "id": 7,
+      "name": "Ocio y Diversión",
+      "icon_name": "sports_esports",
+      "color_hex": "#9C27B0",
+      "default_block_type": "WANTS",
+      "is_system": true
+    },
+    {
+      "id": 8,
+      "name": "Suscripciones (Streaming)",
+      "icon_name": "tv",
+      "color_hex": "#673AB7",
+      "default_block_type": "WANTS",
+      "is_system": true
+    },
+    {
+      "id": 9,
+      "name": "Compras Personales",
+      "icon_name": "shopping_bag",
+      "color_hex": "#3F51B5",
+      "default_block_type": "WANTS",
+      "is_system": true
+    },
+    {
+      "id": 10,
+      "name": "Pago de Deudas y Tarjetas",
+      "icon_name": "credit_card",
+      "color_hex": "#C62828",
+      "default_block_type": "DEBTS",
+      "is_system": true
+    },
+    {
+      "id": 11,
+      "name": "Ahorro e Inversión",
+      "icon_name": "savings",
+      "color_hex": "#2E7D32",
+      "default_block_type": "SAVINGS",
+      "is_system": true
+    },
+    {
+      "id": 12,
+      "name": "Otros Gastos",
+      "icon_name": "category",
+      "color_hex": "#795548",
+      "default_block_type": "NEEDS",
+      "is_system": true
+    }
+  ],
+  "tags": [],
+  "allocation_models": [
+    {
+      "id": 1,
+      "name": "50/30/20 Clásico",
+      "is_active": true,
+      "created_at": 1792919531308
+    },
+    {
+      "id": 2,
+      "name": "70/20/10 Agresivo para Deudas",
+      "is_active": false,
+      "created_at": 1792919531599
+    },
+    {
+      "id": 3,
+      "name": "40/30/20/10 Equilibrado",
+      "is_active": false,
+      "created_at": 1792919531737
+    }
+  ],
+  "allocation_blocks": [
+    {
+      "id": 1,
+      "model_id": 1,
+      "name": "Necesidades Básicas",
+      "percentage": 50,
+      "type": "NEEDS",
+      "color_hex": "#1976D2",
+      "order_index": 1,
+      "absorb_remainder": true
+    },
+    {
+      "id": 2,
+      "model_id": 1,
+      "name": "Deseos y Ocio",
+      "percentage": 30,
+      "type": "WANTS",
+      "color_hex": "#FF9800",
+      "order_index": 2,
+      "absorb_remainder": false
+    },
+    {
+      "id": 3,
+      "model_id": 1,
+      "name": "Ahorro e Inversión",
+      "percentage": 20,
+      "type": "SAVINGS",
+      "color_hex": "#2E7D32",
+      "order_index": 3,
+      "absorb_remainder": false
+    },
+    {
+      "id": 4,
+      "model_id": 2,
+      "name": "Gastos de Vida y Deudas",
+      "percentage": 70,
+      "type": "NEEDS",
+      "color_hex": "#C62828",
+      "order_index": 1,
+      "absorb_remainder": true
+    },
+    {
+      "id": 5,
+      "model_id": 2,
+      "name": "Fondo de Emergencia",
+      "percentage": 20,
+      "type": "SAVINGS",
+      "color_hex": "#2E7D32",
+      "order_index": 2,
+      "absorb_remainder": false
+    },
+    {
+      "id": 6,
+      "model_id": 2,
+      "name": "Gastos Personales Mínimos",
+      "percentage": 10,
+      "type": "WANTS",
+      "color_hex": "#FFB300",
+      "order_index": 3,
+      "absorb_remainder": false
+    },
+    {
+      "id": 7,
+      "model_id": 3,
+      "name": "Necesidades",
+      "percentage": 40,
+      "type": "NEEDS",
+      "color_hex": "#1565C0",
+      "order_index": 1,
+      "absorb_remainder": true
+    },
+    {
+      "id": 8,
+      "model_id": 3,
+      "name": "Deseos",
+      "percentage": 30,
+      "type": "WANTS",
+      "color_hex": "#FB8C00",
+      "order_index": 2,
+      "absorb_remainder": false
+    },
+    {
+      "id": 9,
+      "model_id": 3,
+      "name": "Ahorro",
+      "percentage": 20,
+      "type": "SAVINGS",
+      "color_hex": "#388E3C",
+      "order_index": 3,
+      "absorb_remainder": false
+    },
+    {
+      "id": 10,
+      "model_id": 3,
+      "name": "Educación y Crecimiento",
+      "percentage": 10,
+      "type": "CUSTOM",
+      "color_hex": "#8E24AA",
+      "order_index": 4,
+      "absorb_remainder": false
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "account_id": 2,
+      "category_id": 11,
+      "amount_cents": 25550000,
+      "type": "ADJUSTMENT",
+      "date_millis": 1792957349351,
+      "note": "Ajuste manual de saldo (+255500)",
+      "is_leisure": false,
+      "created_at": 1792957349351
+    },
+    {
+      "id": 2,
+      "account_id": 1,
+      "category_id": 1,
+      "block_id": 1,
+      "amount_cents": 4700000,
+      "type": "EXPENSE",
+      "date_millis": 1792976112525,
+      "is_leisure": false,
+      "created_at": 1792976112595
+    },
+    {
+      "id": 3,
+      "account_id": 1,
+      "category_id": 2,
+      "block_id": 1,
+      "amount_cents": 50000000,
+      "type": "EXPENSE",
+      "date_millis": 1792990965839,
+      "is_leisure": false,
+      "created_at": 1792990965926
+    },
+    {
+      "id": 4,
+      "account_id": 1,
+      "category_id": 11,
+      "amount_cents": 1200000,
+      "type": "INCOME",
+      "date_millis": 1793204636487,
+      "note": "Ingreso confirmado: Ingreso rápido",
+      "merchant": "Ingreso rápido",
+      "is_leisure": false,
+      "created_at": 1793204636512
+    },
+    {
+      "id": 5,
+      "account_id": 1,
+      "category_id": 12,
+      "block_id": 2,
+      "amount_cents": 450000,
+      "type": "EXPENSE",
+      "date_millis": 1793278408974,
+      "note": "Detectado: Bancolombia (NOTIFICATION)",
+      "merchant": "Transf: cuenta *3171750022",
+      "is_leisure": false,
+      "created_at": 1793280474140
+    },
+    {
+      "id": 6,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 500000,
+      "type": "EXPENSE",
+      "date_millis": 1791072000000,
+      "merchant": "Mundo Vending Colombia",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 7,
+      "account_id": 3,
+      "category_id": 6,
+      "block_id": 2,
+      "amount_cents": 4980000,
+      "type": "EXPENSE",
+      "date_millis": 1791072000000,
+      "merchant": "Mc Donald S",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 8,
+      "account_id": 3,
+      "category_id": 4,
+      "block_id": 1,
+      "amount_cents": 465000,
+      "type": "EXPENSE",
+      "date_millis": 1791072000000,
+      "merchant": "Farmatodo Parque",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 9,
+      "account_id": 3,
+      "category_id": 6,
+      "block_id": 2,
+      "amount_cents": 9140000,
+      "type": "EXPENSE",
+      "date_millis": 1790985600000,
+      "merchant": "Wok City U",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 10,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 2970000,
+      "type": "EXPENSE",
+      "date_millis": 1790985600000,
+      "merchant": "Oxxo Eds Las Aguas",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 11,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 28800000,
+      "type": "EXPENSE",
+      "date_millis": 1790985600000,
+      "merchant": "Octopux Publicidad S A",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 12,
+      "account_id": 3,
+      "category_id": 1,
+      "block_id": 1,
+      "amount_cents": 865000,
+      "type": "EXPENSE",
+      "date_millis": 1790899200000,
+      "merchant": "Tienda D1 Cinemateca",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 13,
+      "account_id": 3,
+      "category_id": 1,
+      "block_id": 1,
+      "amount_cents": 1699000,
+      "type": "EXPENSE",
+      "date_millis": 1790899200000,
+      "merchant": "Exito Las Nieves",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 14,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 59600000,
+      "type": "EXPENSE",
+      "date_millis": 1790899200000,
+      "merchant": "Merpag*3",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 15,
+      "account_id": 3,
+      "category_id": 4,
+      "block_id": 1,
+      "amount_cents": 2976000,
+      "type": "EXPENSE",
+      "date_millis": 1790899200000,
+      "merchant": "Drogas la Rebaja Germa",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 16,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 35648800,
+      "type": "EXPENSE",
+      "date_millis": 1790899200000,
+      "merchant": "El Viajero Monserrate",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 17,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 7911464,
+      "type": "EXPENSE",
+      "date_millis": 1790812800000,
+      "merchant": "Www.Hostelworld.Com",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 18,
+      "account_id": 3,
+      "category_id": 6,
+      "block_id": 2,
+      "amount_cents": 5090000,
+      "type": "EXPENSE",
+      "date_millis": 1790812800000,
+      "merchant": "Pizza Hut Chapinero",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 19,
+      "account_id": 3,
+      "category_id": 6,
+      "block_id": 2,
+      "amount_cents": 2270000,
+      "type": "EXPENSE",
+      "date_millis": 1790812800000,
+      "merchant": "Tienda de Cafe Ju Vald",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 20,
+      "account_id": 3,
+      "category_id": 6,
+      "block_id": 2,
+      "amount_cents": 4990000,
+      "type": "EXPENSE",
+      "date_millis": 1790812800000,
+      "merchant": "Kokoriko Aeropuerto",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 21,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 5890000,
+      "type": "EXPENSE",
+      "date_millis": 1790640000000,
+      "merchant": "Wompi*Hi B Colombia",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 22,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 1990000,
+      "type": "EXPENSE",
+      "date_millis": 1790640000000,
+      "merchant": "Wompi*Hi B Colombia",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 23,
+      "account_id": 3,
+      "category_id": 8,
+      "block_id": 2,
+      "amount_cents": 1990000,
+      "type": "EXPENSE",
+      "date_millis": 1789862400000,
+      "merchant": "Servicios Web Ebanx Co",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 24,
+      "account_id": 3,
+      "category_id": 8,
+      "block_id": 2,
+      "amount_cents": 1550000,
+      "type": "EXPENSE",
+      "date_millis": 1789516800000,
+      "merchant": "Google *Talkin Global",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 25,
+      "account_id": 3,
+      "category_id": 9,
+      "block_id": 2,
+      "amount_cents": 8883800,
+      "type": "EXPENSE",
+      "date_millis": 1789430400000,
+      "merchant": "Temu Com",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 26,
+      "account_id": 3,
+      "category_id": 12,
+      "block_id": 1,
+      "amount_cents": 206454000,
+      "type": "EXPENSE",
+      "date_millis": 1775520000000,
+      "merchant": "Mercado Pago Ticketmas",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 27,
+      "account_id": 3,
+      "category_id": 9,
+      "block_id": 2,
+      "amount_cents": 6208919,
+      "type": "EXPENSE",
+      "date_millis": 1769212800000,
+      "merchant": "Eximbay*Weverse",
+      "is_leisure": false,
+      "created_at": 1793305714320
+    }
+  ],
+  "transaction_tags": [],
+  "incomes": [
+    {
+      "id": 3,
+      "account_id": 1,
+      "description": "Primera quincena",
+      "amount_cents": 70000000,
+      "frequency": "MONTHLY",
+      "expected_date_millis": 1794718800000,
+      "is_received": false,
+      "created_at": 1792970766356
+    },
+    {
+      "id": 5,
+      "account_id": 1,
+      "description": "Segunda quincena",
+      "amount_cents": 80000000,
+      "frequency": "MONTHLY",
+      "expected_date_millis": 1793336400000,
+      "is_received": false,
+      "created_at": 1792970793801
+    },
+    {
+      "id": 6,
+      "account_id": 1,
+      "description": "Ingreso rápido",
+      "amount_cents": 1200000,
+      "frequency": "ONE_TIME",
+      "expected_date_millis": 1793204636452,
+      "received_date_millis": 1793204636487,
+      "is_received": true,
+      "created_at": 1793204636452
+    }
+  ],
+  "income_allocations": [
+    {
+      "id": 1,
+      "income_id": 6,
+      "block_id": 1,
+      "assigned_cents": 600000
+    },
+    {
+      "id": 2,
+      "income_id": 6,
+      "block_id": 2,
+      "assigned_cents": 360000
+    },
+    {
+      "id": 3,
+      "income_id": 6,
+      "block_id": 3,
+      "assigned_cents": 240000
+    }
+  ],
+  "credit_cards": [
+    {
+      "id": 1,
+      "account_id": 2,
+      "credit_limit_cents": 230000000,
+      "cut_off_day": 10,
+      "payment_due_day": 20,
+      "interest_rate_ea": 29.66,
+      "handling_fee_cents": 0,
+      "last_four_digits": "5171"
+    },
+    {
+      "id": 2,
+      "account_id": 3,
+      "credit_limit_cents": 900000000,
+      "cut_off_day": 15,
+      "payment_due_day": 4,
+      "interest_rate_ea": 28.15,
+      "handling_fee_cents": 0,
+      "last_four_digits": "4233"
+    }
+  ],
+  "card_purchases": [
+    {
+      "id": 1,
+      "card_id": 1,
+      "merchant": "RAPPI Travel (Vuelos)",
+      "purchase_date_millis": 1720933200000,
+      "total_amount_cents": 138324404,
+      "installments_total": 6,
+      "installments_paid": 3,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 2,
+      "card_id": 1,
+      "merchant": "RAPPI Travel (Hotel/Autos)",
+      "purchase_date_millis": 1720933200000,
+      "total_amount_cents": 45560804,
+      "installments_total": 6,
+      "installments_paid": 3,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 3,
+      "card_id": 1,
+      "merchant": "SURTIFAMILIAR CERRITO",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 3510000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 4,
+      "card_id": 1,
+      "merchant": "TIENDAS ARA",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 5060000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 5,
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1726203600000,
+      "total_amount_cents": 3364300,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 6,
+      "card_id": 1,
+      "merchant": "MERCADO PAGO*MERCADOLI",
+      "purchase_date_millis": 1726290000000,
+      "total_amount_cents": 5539000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 7,
+      "card_id": 1,
+      "merchant": "SIGMA ELECTRONICA LIMI",
+      "purchase_date_millis": 1726290000000,
+      "total_amount_cents": 13137600,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 8,
+      "card_id": 1,
+      "merchant": "EDS EL PARAISO",
+      "purchase_date_millis": 1726462800000,
+      "total_amount_cents": 3300400,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 9,
+      "card_id": 1,
+      "merchant": "INVERSIONES PURPURE SA",
+      "purchase_date_millis": 1726462800000,
+      "total_amount_cents": 9889000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 10,
+      "card_id": 1,
+      "merchant": "EDS EL PARAISO",
+      "purchase_date_millis": 1726722000000,
+      "total_amount_cents": 3201500,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 11,
+      "card_id": 1,
+      "merchant": "UNICENTRO CALI",
+      "purchase_date_millis": 1726808400000,
+      "total_amount_cents": 250000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 12,
+      "card_id": 1,
+      "merchant": "GOYURT UNICENTRO CALI",
+      "purchase_date_millis": 1726808400000,
+      "total_amount_cents": 1590000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 13,
+      "card_id": 1,
+      "merchant": "SUMOTO",
+      "purchase_date_millis": 1726894800000,
+      "total_amount_cents": 6180000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 14,
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1726981200000,
+      "total_amount_cents": 3304000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 15,
+      "card_id": 1,
+      "merchant": "MULTIPLEX UNICALI",
+      "purchase_date_millis": 1727067600000,
+      "total_amount_cents": 2250000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 16,
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1727240400000,
+      "total_amount_cents": 3002500,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 17,
+      "card_id": 1,
+      "merchant": "JERSON FERNANDO ZAMBRA",
+      "purchase_date_millis": 1728018000000,
+      "total_amount_cents": 3000800,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 18,
+      "card_id": 1,
+      "merchant": "BOLD CO SAS CALI",
+      "purchase_date_millis": 1728190800000,
+      "total_amount_cents": 8800000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 19,
+      "card_id": 1,
+      "merchant": "TIENDA D1 CALI PARQUE",
+      "purchase_date_millis": 1728277200000,
+      "total_amount_cents": 855000,
+      "installments_total": 1,
+      "installments_paid": 1,
+      "interest_rate_nm": 0,
+      "is_fully_paid": true
+    },
+    {
+      "id": 20,
+      "card_id": 1,
+      "merchant": "ESTACION DE SERVICIO",
+      "purchase_date_millis": 1728536520000,
+      "total_amount_cents": 3305200,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 21,
+      "card_id": 1,
+      "merchant": "ALMACENES EXITO",
+      "purchase_date_millis": 1728540600000,
+      "total_amount_cents": 4022500,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 22,
+      "card_id": 1,
+      "merchant": "DOLLARCITY",
+      "purchase_date_millis": 1728546000000,
+      "total_amount_cents": 8000010,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 23,
+      "card_id": 1,
+      "merchant": "ALIEXPRESS",
+      "purchase_date_millis": 1728640380000,
+      "total_amount_cents": 15563280,
+      "installments_total": 36,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 24,
+      "card_id": 1,
+      "merchant": "HOMECENTER",
+      "purchase_date_millis": 1728646800000,
+      "total_amount_cents": 1970000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 25,
+      "card_id": 1,
+      "merchant": "GOYURT JARDIN PLAZA",
+      "purchase_date_millis": 1728651780000,
+      "total_amount_cents": 1590000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 26,
+      "card_id": 1,
+      "merchant": "SC PASOANCHO",
+      "purchase_date_millis": 1728715560000,
+      "total_amount_cents": 8511200,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 27,
+      "card_id": 1,
+      "merchant": "TIENDAS D1",
+      "purchase_date_millis": 1728716160000,
+      "total_amount_cents": 1049000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 28,
+      "card_id": 1,
+      "merchant": "TIENDAS ARA",
+      "purchase_date_millis": 1728717420000,
+      "total_amount_cents": 1827000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 29,
+      "card_id": 1,
+      "merchant": "ESTACION DE SERVICIO",
+      "purchase_date_millis": 1728989100000,
+      "total_amount_cents": 3000000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 30,
+      "card_id": 1,
+      "merchant": "TIENDAS ARA",
+      "purchase_date_millis": 1729082820000,
+      "total_amount_cents": 7700010,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 31,
+      "card_id": 1,
+      "merchant": "TIENDAS D1",
+      "purchase_date_millis": 1729254120000,
+      "total_amount_cents": 1263000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 32,
+      "card_id": 1,
+      "merchant": "ESTACION DE SERVICIO",
+      "purchase_date_millis": 1729573380000,
+      "total_amount_cents": 3135000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 33,
+      "card_id": 1,
+      "merchant": "KINGPAPACO",
+      "purchase_date_millis": 1729717020000,
+      "total_amount_cents": 6000000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 34,
+      "card_id": 1,
+      "merchant": "RAPPI - SALCHIBURGER",
+      "purchase_date_millis": 1729790880000,
+      "total_amount_cents": 1570000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 35,
+      "card_id": 1,
+      "merchant": "ESTACION DE SERVICIO",
+      "purchase_date_millis": 1729792920000,
+      "total_amount_cents": 3201400,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 36,
+      "card_id": 2,
+      "merchant": "Mundo Vending Colombia",
+      "purchase_date_millis": 1791072000000,
+      "total_amount_cents": 500000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 37,
+      "card_id": 2,
+      "merchant": "Mc Donald S",
+      "purchase_date_millis": 1791072000000,
+      "total_amount_cents": 4980000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 38,
+      "card_id": 2,
+      "merchant": "Farmatodo Parque",
+      "purchase_date_millis": 1791072000000,
+      "total_amount_cents": 465000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 39,
+      "card_id": 2,
+      "merchant": "Wok City U",
+      "purchase_date_millis": 1790985600000,
+      "total_amount_cents": 9140000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 40,
+      "card_id": 2,
+      "merchant": "Oxxo Eds Las Aguas",
+      "purchase_date_millis": 1790985600000,
+      "total_amount_cents": 2970000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 41,
+      "card_id": 2,
+      "merchant": "Octopux Publicidad S A",
+      "purchase_date_millis": 1790985600000,
+      "total_amount_cents": 28800000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 42,
+      "card_id": 2,
+      "merchant": "Tienda D1 Cinemateca",
+      "purchase_date_millis": 1790899200000,
+      "total_amount_cents": 865000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 43,
+      "card_id": 2,
+      "merchant": "Exito Las Nieves",
+      "purchase_date_millis": 1790899200000,
+      "total_amount_cents": 1699000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 44,
+      "card_id": 2,
+      "merchant": "Merpag*3",
+      "purchase_date_millis": 1790899200000,
+      "total_amount_cents": 59600000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 45,
+      "card_id": 2,
+      "merchant": "Drogas la Rebaja Germa",
+      "purchase_date_millis": 1790899200000,
+      "total_amount_cents": 2976000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 46,
+      "card_id": 2,
+      "merchant": "El Viajero Monserrate",
+      "purchase_date_millis": 1790899200000,
+      "total_amount_cents": 35648800,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 47,
+      "card_id": 2,
+      "merchant": "Www.Hostelworld.Com",
+      "purchase_date_millis": 1790812800000,
+      "total_amount_cents": 7911464,
+      "installments_total": 24,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 48,
+      "card_id": 2,
+      "merchant": "Pizza Hut Chapinero",
+      "purchase_date_millis": 1790812800000,
+      "total_amount_cents": 5090000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 49,
+      "card_id": 2,
+      "merchant": "Tienda de Cafe Ju Vald",
+      "purchase_date_millis": 1790812800000,
+      "total_amount_cents": 2270000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 50,
+      "card_id": 2,
+      "merchant": "Kokoriko Aeropuerto",
+      "purchase_date_millis": 1790812800000,
+      "total_amount_cents": 4990000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 51,
+      "card_id": 2,
+      "merchant": "Wompi*Hi B Colombia",
+      "purchase_date_millis": 1790640000000,
+      "total_amount_cents": 5890000,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 52,
+      "card_id": 2,
+      "merchant": "Wompi*Hi B Colombia",
+      "purchase_date_millis": 1790640000000,
+      "total_amount_cents": 1990000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 53,
+      "card_id": 2,
+      "merchant": "Servicios Web Ebanx Co",
+      "purchase_date_millis": 1789862400000,
+      "total_amount_cents": 1990000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 54,
+      "card_id": 2,
+      "merchant": "Google *Talkin Global",
+      "purchase_date_millis": 1789516800000,
+      "total_amount_cents": 1550000,
+      "installments_total": 1,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 55,
+      "card_id": 2,
+      "merchant": "Temu Com",
+      "purchase_date_millis": 1789430400000,
+      "total_amount_cents": 8883800,
+      "installments_total": 3,
+      "installments_paid": 0,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 56,
+      "card_id": 2,
+      "merchant": "Mercado Pago Ticketmas",
+      "purchase_date_millis": 1775520000000,
+      "total_amount_cents": 206454000,
+      "installments_total": 6,
+      "installments_paid": 5,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    },
+    {
+      "id": 57,
+      "card_id": 2,
+      "merchant": "Eximbay*Weverse",
+      "purchase_date_millis": 1769212800000,
+      "total_amount_cents": 6208919,
+      "installments_total": 24,
+      "installments_paid": 8,
+      "interest_rate_nm": 0.0,
+      "is_fully_paid": false
+    }
+  ],
+  "debts": [
+    {
+      "id": 1,
+      "name": "BancoBogota",
+      "principal_amount_cents": 1100000000,
+      "current_balance_cents": 973940100,
+      "interest_rate_ea": 24.12,
+      "monthly_installment_cents": 34461732,
+      "due_day_of_month": 1,
+      "start_date_millis": 1792957256706,
+      "is_settled": false
+    }
+  ],
+  "debt_payments": [],
+  "budgets": [],
+  "savings_goals": [],
+  "recurring_items": [
+    {
+      "id": 1,
+      "account_id": 1,
+      "category_id": 3,
+      "block_id": 1,
+      "title": "Parqueadero moto",
+      "amount_cents": 3000000,
+      "frequency": "MONTHLY",
+      "next_due_date_millis": 1794718800000,
+      "notify_days_before": 2,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "account_id": 1,
+      "category_id": 10,
+      "block_id": 1,
+      "title": "Pago de celular",
+      "amount_cents": 9600000,
+      "frequency": "MONTHLY",
+      "next_due_date_millis": 1793509200000,
+      "notify_days_before": 2,
+      "is_active": true
+    }
+  ],
+  "capture_rules": [],
+  "pending_transactions": [
+    {
+      "id": 1,
+      "source": "NOTIFICATION",
+      "source_sender": "Bancolombia",
+      "raw_text": "Datos confidenciales ocultos. 85540: Bancolombia: Transferiste $4,500.00 desde tu cuenta *9483 a la cuenta *3171750022 el 29/10/26 a las 07:53. ¿Dudas? Llamanos al 018000931987. Estamos cerca.",
+      "deduplication_hash": "3064b03adb2cc2c4d0121701645a17a3",
+      "suggested_amount_cents": 450000,
+      "suggested_merchant": "Transf: cuenta *3171750022",
+      "suggested_account_id": 1,
+      "suggested_category_id": 12,
+      "suggested_block_id": 2,
+      "suggested_type": "EXPENSE",
+      "detected_date_millis": 1793278408974,
+      "status": "AUTO_CONFIRMED"
+    }
+  ],
+  "merchant_learnings": [],
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Yelis",
+      "kind": "PERSON",
+      "created_at": 1793305714320
+    }
+  ],
+  "receivables": [
+    {
+      "id": 1,
+      "contact_id": 1,
+      "source_transaction_id": 6,
+      "note": "Porción Yelis de Mundo Vending Colombia",
+      "owed_cents": 250000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 2,
+      "contact_id": 1,
+      "source_transaction_id": 7,
+      "note": "Porción Yelis de Mc Donald S",
+      "owed_cents": 2490000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 3,
+      "contact_id": 1,
+      "source_transaction_id": 8,
+      "note": "Porción Yelis de Farmatodo Parque",
+      "owed_cents": 232500,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 4,
+      "contact_id": 1,
+      "source_transaction_id": 9,
+      "note": "Porción Yelis de Wok City U",
+      "owed_cents": 4570000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 5,
+      "contact_id": 1,
+      "source_transaction_id": 10,
+      "note": "Porción Yelis de Oxxo Eds Las Aguas",
+      "owed_cents": 1485000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 6,
+      "contact_id": 1,
+      "source_transaction_id": 11,
+      "note": "Porción Yelis de Octopux Publicidad S A",
+      "owed_cents": 28800000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 7,
+      "contact_id": 1,
+      "source_transaction_id": 12,
+      "note": "Porción Yelis de Tienda D1 Cinemateca",
+      "owed_cents": 432500,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 8,
+      "contact_id": 1,
+      "source_transaction_id": 13,
+      "note": "Porción Yelis de Exito Las Nieves",
+      "owed_cents": 849500,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 9,
+      "contact_id": 1,
+      "source_transaction_id": 14,
+      "note": "Porción Yelis de Merpag*3",
+      "owed_cents": 59600000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 10,
+      "contact_id": 1,
+      "source_transaction_id": 15,
+      "note": "Porción Yelis de Drogas la Rebaja Germa",
+      "owed_cents": 1488000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 11,
+      "contact_id": 1,
+      "source_transaction_id": 16,
+      "note": "Porción Yelis de El Viajero Monserrate",
+      "owed_cents": 17824400,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 12,
+      "contact_id": 1,
+      "source_transaction_id": 17,
+      "note": "Porción Yelis de Www.Hostelworld.Com",
+      "owed_cents": 2000000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 13,
+      "contact_id": 1,
+      "source_transaction_id": 18,
+      "note": "Porción Yelis de Pizza Hut Chapinero",
+      "owed_cents": 2545000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 14,
+      "contact_id": 1,
+      "source_transaction_id": 19,
+      "note": "Porción Yelis de Tienda de Cafe Ju Vald",
+      "owed_cents": 1135000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 15,
+      "contact_id": 1,
+      "source_transaction_id": 20,
+      "note": "Porción Yelis de Kokoriko Aeropuerto",
+      "owed_cents": 2495000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 16,
+      "contact_id": 1,
+      "source_transaction_id": 21,
+      "note": "Porción Yelis de Wompi*Hi B Colombia",
+      "owed_cents": 2945000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 17,
+      "contact_id": 1,
+      "source_transaction_id": 22,
+      "note": "Porción Yelis de Wompi*Hi B Colombia",
+      "owed_cents": 995000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 18,
+      "contact_id": 1,
+      "source_transaction_id": 23,
+      "note": "Porción Yelis de Servicios Web Ebanx Co",
+      "owed_cents": 995000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 19,
+      "contact_id": 1,
+      "source_transaction_id": 24,
+      "note": "Porción Yelis de Google *Talkin Global",
+      "owed_cents": 775000,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 20,
+      "contact_id": 1,
+      "source_transaction_id": 25,
+      "note": "Porción Yelis de Temu Com",
+      "owed_cents": 4441900,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 21,
+      "contact_id": 1,
+      "source_transaction_id": 26,
+      "note": "Porción Yelis de Mercado Pago Ticketmas",
+      "owed_cents": 17204500,
+      "is_settled": false,
+      "created_at": 1793305714320
+    },
+    {
+      "id": 22,
+      "contact_id": 1,
+      "source_transaction_id": 27,
+      "note": "Porción Yelis de Eximbay*Weverse",
+      "owed_cents": 2069639,
+      "is_settled": false,
+      "created_at": 1793305714320
+    }
+  ]
+}

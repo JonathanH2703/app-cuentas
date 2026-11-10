@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_dark">#0F1512</color>
+    <color name="background_light">#FBFDF9</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary">#006C4C</color>
+    <string name="app_name">Finanzas</string>
+    <string name="auth_description">Usa tu huella, rostro o PIN del dispositivo</string>
+    <string name="auth_error">Error en la autenticación.</string>
+    <string name="auth_failed">No se reconoció la huella o rostro. Intenta de nuevo.</string>
+    <string name="auth_subtitle">Autentícate para acceder a tus finanzas</string>
+    <string name="auth_title">Seguridad Financiera</string>
+    <string name="auth_unlock">Desbloquear</string>
+    <string name="db_status_ok">Base de datos Room cifrada con SQLCipher activa</string>
+    <string name="security_flag_secure">Protección visual activa (FLAG_SECURE)</string>
+    <style name="Theme.AppCuentas" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

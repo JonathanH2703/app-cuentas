@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.personalfinance.cuentas.app-mergeDebugResources-70:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\jhoyos\\.gradle\\caches\\8.10.2\\transforms\\fd315b2c28f2a96031551ad81fdf8960\\transformed\\appcompat-1.2.0\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}

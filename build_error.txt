@@ -1,0 +1,32 @@
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:186:41 Unresolved reference 'Flow'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:190:41 Unresolved reference 'Flow'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:196:39 Unresolved reference 'Flow'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:200:36 Unresolved reference 'Flow'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:204:38 Unresolved reference 'Flow'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'T1'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'T2'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'T3'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'T4'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'T5'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:216:46 Not enough information to infer type argument for 'R'.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:222:8 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:222:21 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:222:34 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:222:45 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/app-cuentas/app/src/main/java/com/personalfinance/cuentas/presentation/dashboard/DashboardViewModel.kt:222:53 Cannot infer type for this parameter. Please specify it explicitly.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 23s

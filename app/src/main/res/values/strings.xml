@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Finanzas</string>
+    <string name="auth_title">Seguridad Financiera</string>
+    <string name="auth_subtitle">Autentícate para acceder a tus finanzas</string>
+    <string name="auth_description">Usa tu huella, rostro o PIN del dispositivo</string>
+    <string name="auth_unlock">Desbloquear</string>
+    <string name="auth_failed">No se reconoció la huella o rostro. Intenta de nuevo.</string>
+    <string name="auth_error">Error en la autenticación.</string>
+    <string name="db_status_ok">Base de datos Room cifrada con SQLCipher activa</string>
+    <string name="security_flag_secure">Protección visual activa (FLAG_SECURE)</string>
+</resources>
